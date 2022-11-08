@@ -1,28 +1,23 @@
 <template>
-<div>home</div>
+  <div>home</div>
 </template>
 
 <script>
 export default {
-  name: "home",
+  name: 'Home',
   components: {},
   mixins: [],
   props: {},
   data() {
-    return {}
+    return {};
   },
   computed: {},
   watch: {},
-  created() {
-  },
-  mounted() {
-  },
-  destroyed() {
-  },
+  created() {},
+  mounted() {},
+  destroyed() {},
   methods: {},
-}
+};
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>
