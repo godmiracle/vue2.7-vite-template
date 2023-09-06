@@ -1,11 +1,13 @@
 <template>
-  <div>about</div>
+  <div><scale-container :width="1920" :height="1080"></scale-container></div>
 </template>
 
 <script>
+import ScaleContainer from '@/components/ScaleContainer.vue';
+
 export default {
   name: 'About',
-  components: {},
+  components: { ScaleContainer },
   mixins: [],
   props: {},
   data() {

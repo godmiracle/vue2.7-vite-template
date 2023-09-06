@@ -1,8 +1,8 @@
 export default [
   {
     path: '/',
-    name: 'home',
-    component: () => import('@/views/home.vue'),
+    name: 'dashboard',
+    component: () => import('@/views/dashboard.vue'),
   },
   {
     path: '/about',
