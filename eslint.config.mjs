@@ -5,4 +5,7 @@ export default antfu({
   rules: {
     'vue/no-unused-refs': 'off',
   },
+  vue: {
+    vueVersion: 2,
+  },
 })
