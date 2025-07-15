@@ -1,52 +1,81 @@
-import { resolve } from 'node:path'
 import vue2 from '@vitejs/plugin-vue2'
-import { defineConfig, loadEnv } from 'vite'
+import AutoImport from 'unplugin-auto-import/vite'
+import { ElementUiResolver } from 'unplugin-vue-components/resolvers'
+import Components from 'unplugin-vue-components/vite'
+import { defineConfig } from 'vite'
 
-export default ({ mode }) => {
-  const { VITE_PORT, VITE_BASE_URL } = loadEnv(mode, process.cwd())
+export default defineConfig({
+  plugins: [
+    vue2(),
 
-  return defineConfig({
-    base: VITE_BASE_URL,
-    plugins: [vue2()],
-    resolve: {
-      alias: {
-        '@': resolve(__dirname, 'src'),
-      },
-    },
-    css: {
-      preprocessorOptions: {
-        sass: {
-          modifyVars: {
-            hack: `true; @import (reference) "${resolve('src/style/variables.scss')}";`,
-          },
-          math: 'strict',
-          javascriptEnabled: true,
+    AutoImport({
+      imports: [
+        // 移除Vue原生API，仅从VueUse导入
+        'vue-router',
+        'vuex',
+        {
+          '@vueuse/core': [
+            'ref',
+            'reactive',
+            'computed',
+            // 添加其他需要的VueUse函数
+          ],
         },
+      ],
+      dts: 'src/auto-imports.d.ts',
+      vueTemplate: true,
+      // 配置处理重复导入的策略
+      eslintrc: {
+        enabled: true, // 生成ESLint配置
+        filepath: './.eslintrc-auto-import.json', // 指定配置文件路径
+        globalsPropValue: true,
+      },
+      // 可选：明确指定优先使用VueUse的实现
+      resolvers: [
+        (name) => {
+          if (name.startsWith('use')) {
+            return { name, from: '@vueuse/core' }
+          }
+        },
+      ],
+    }),
+
+    Components({
+      resolvers: [
+        ElementUiResolver(),
+      ],
+      dts: 'src/components.d.ts',
+      include: [/\.vue$/, /\.vue\?vue/, /\.tsx$/],
+    }),
+  ],
+
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
+
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // additionalData: `@import "@/styles/variables.scss";`,
       },
     },
-    server: {
-      // 是否开启 https
-      https: false,
-      // 端口号
-      port: VITE_PORT,
-      // 监听所有地址
-      host: '0.0.0.0',
-      // 服务启动时是否自动打开浏览器
-      open: true,
-      // 允许跨域
-      cors: true,
-      // 自定义代理规则
-      proxy: {},
+  },
+
+  build: {
+    target: 'esnext',
+  },
+
+  server: {
+    port: 3000,
+    open: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, ''),
+      },
     },
-    build: {
-      // 设置最终构建的浏览器兼容目标
-      target: 'es2015',
-      // 构建后是否生成 source map 文件
-      sourcemap: false,
-      //  chunk 大小警告的限制（以 kbs 为单位）
-      chunkSizeWarningLimit: 2000,
-      // 启用/禁用 gzip 压缩大小报告
-      reportCompressedSize: false,
-    },
-  })
-}
+  },
+})

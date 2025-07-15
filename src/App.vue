@@ -11,6 +11,10 @@ import HelloWorld from '@/views/HelloWorld.vue'
       <a href="https://vuejs.org/" target="_blank">
         <img src="./assets/vue.svg" class="logo vue" alt="Vue logo">
       </a>
+      <i class="el-icon-delete" />
+      <el-link type="warning">
+        警告链接
+      </el-link>
     </div>
     <HelloWorld msg="Vite + Vue" />
   </div>

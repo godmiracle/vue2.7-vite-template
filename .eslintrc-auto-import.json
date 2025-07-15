@@ -1,0 +1,20 @@
+{
+  "globals": {
+    "computed": true,
+    "createLogger": true,
+    "createNamespacedHelpers": true,
+    "createStore": true,
+    "mapActions": true,
+    "mapGetters": true,
+    "mapMutations": true,
+    "mapState": true,
+    "onBeforeRouteLeave": true,
+    "onBeforeRouteUpdate": true,
+    "reactive": true,
+    "ref": true,
+    "useLink": true,
+    "useRoute": true,
+    "useRouter": true,
+    "useStore": true
+  }
+}
